@@ -48,30 +48,30 @@ Plus the paranoid extras:
 ```mermaid
 flowchart LR
     subgraph research [research]
-        A[trends<br/>hook bank] --> B[harvest<br/>arXiv q-fin]
-        B --> C[extract<br/>paper to constrained DSL]
+        A["trends<br/>hook bank"] --> B["harvest<br/>arXiv q-fin"]
+        B --> C["extract<br/>paper to constrained DSL"]
     end
     subgraph proof [proof]
-        C --> D[data<br/>IBKR / yfinance / stooq]
-        D --> E[backtest<br/>walk-forward engine]
-        E --> F[insight<br/>angle + lane + tone]
+        C --> D["data<br/>IBKR, yfinance, stooq"]
+        D --> E["backtest<br/>walk-forward engine"]
+        E --> F["insight<br/>angle + lane + tone"]
     end
     subgraph production [production]
-        F --> G[script<br/>20-45s, beat-timed]
-        G --> H[voice<br/>4-engine TTS chain]
-        G --> I[charts<br/>1080x1920 progressive reveal]
-        H --> J[assemble<br/>captions, ducked bed, watermark]
+        F --> G["script<br/>20-45s, beat-timed"]
+        G --> H["voice<br/>4-engine TTS chain"]
+        G --> I["charts<br/>1080x1920 progressive reveal"]
+        H --> J["assemble<br/>captions, ducked bed, watermark"]
         I --> J
     end
     subgraph gatekeeping [gatekeeping]
-        J --> K{qc + factcheck<br/>hard gates}
-        K -->|pass| L[package<br/>APPROVAL_PENDING]
-        K -->|fail| X[rejected]
-        L --> M{human DECISION}
-        M -->|APPROVE| N[publish]
-        M -->|REJECT:tag| O[learning loop]
+        J --> K{"qc + factcheck<br/>hard gates"}
+        K -->|"pass"| L["package<br/>APPROVAL_PENDING"]
+        K -->|"fail"| X["rejected"]
+        L --> M{"human DECISION"}
+        M -->|"APPROVE"| N["publish"]
+        M -->|"REJECT tag"| O["learning loop"]
     end
-    N --> P[feedback<br/>IG insights] --> A
+    N --> P["feedback<br/>IG insights"] --> A
 ```
 
 34 modules, ~4,000 lines, typed end-to-end: every stage passes a Pydantic contract

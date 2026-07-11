@@ -1,0 +1,19 @@
+# local-only / large binaries- regeneration documented in docs/HANDOFF_PLAN.md
+# NOTE: gitignore has NO inline comments- patterns must sit alone on their line
+.env
+out/
+state/papers/
+state/ledger.db
+state/work/
+state/runs.jsonl
+state/marketdata/*_live.parquet
+__pycache__/
+
+# piper: download piper_windows_amd64.zip (rhasspy/piper 2023.11.14-2) + en_GB-alan-medium voice (HF rhasspy/piper-voices)
+tools/piper/
+
+# kokoro: download kokoro-v1.0.onnx + voices-v1.0.bin (thewh1teagle/kokoro-onnx releases, model-files-v1.0)
+tools/kokoro/
+
+# music: regenerate via python tools/make_bed.py
+assets/music/*.wav

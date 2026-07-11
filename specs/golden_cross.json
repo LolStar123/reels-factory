@@ -1,0 +1,18 @@
+{
+  "name": "Golden cross (50/200 MA crossover)",
+  "hypothesis": "The 50-day moving average crossing above the 200-day signals a durable uptrend worth owning.",
+  "shape": "crossover",
+  "universe": ["SPY"],
+  "signal_rule": "Hold the S&P 500 while its 50-day average is above its 200-day average; move to cash when it drops below.",
+  "plain_rule": "When the 50-day line crosses above the 200-day line, you buy. When it crosses back under, you sell.",
+  "display_title": "The Golden Cross",
+  "params": {"fast_d": 50, "slow_d": 200},
+  "entry": "50-day MA crosses above 200-day MA",
+  "exit": "50-day MA crosses below 200-day MA (the death cross)",
+  "rebalance": "daily",
+  "position_sizing": "all_in_or_cash",
+  "lookback": "200 days",
+  "claimed_result": "The most-quoted buy signal in retail trading- claimed to catch every bull market and dodge every crash",
+  "paper_ref": "Brock, Lakonishok & LeBaron (1992), Simple Technical Trading Rules and the Stochastic Properties of Stock Returns, Journal of Finance",
+  "codeable": true
+}

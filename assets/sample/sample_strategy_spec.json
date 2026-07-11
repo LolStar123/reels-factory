@@ -1,0 +1,18 @@
+{
+  "name": "Two-century trend following (12m sign)",
+  "hypothesis": "Trends persist across asset classes: the sign of the trailing 12-month return predicts the next month's return.",
+  "shape": "momentum",
+  "universe": ["SPY", "TLT", "GLD"],
+  "signal_rule": "For each asset, go long when its trailing 12-month return is positive, flat when negative; equal-weight the longs.",
+  "plain_rule": "If it went up over the last 12 months, you buy. If it went down, you sit in cash.",
+  "display_title": "The 12-Month Trend Rule",
+  "params": {"lookback_m": 12, "skip_m": 0, "long_short": false, "cross_sectional": false},
+  "entry": "12m return > 0 at month end",
+  "exit": "12m return <= 0 at month end",
+  "rebalance": "monthly",
+  "position_sizing": "equal_weight",
+  "lookback": "12 months",
+  "claimed_result": "Sharpe ~0.8 per asset, ~1.7 diversified, stable for two centuries (paper, gross of costs)",
+  "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+  "codeable": true
+}

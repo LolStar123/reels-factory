@@ -1,0 +1,113 @@
+{
+ "schema_version": 1,
+ "window_days": 30,
+ "by_vertical": {
+  "high_finance": [
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "surprise",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "surprise",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "surprise",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "surprise",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Brock, Lakonishok & LeBaron (1992), Simple Technical Trading Rules and the Stochastic Properties of Stock Returns, Journal of Finance",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Brock, Lakonishok & LeBaron (1992), Simple Technical Trading Rules and the Stochastic Properties of Stock Returns, Journal of Finance",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   },
+   {
+    "paper_ref": "Brock, Lakonishok & LeBaron (1992), Simple Technical Trading Rules and the Stochastic Properties of Stock Returns, Journal of Finance",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   }
+  ],
+  "wannabe_quant": [
+   {
+    "paper_ref": "Lemperiere et al. (2014), Two Centuries of Trend Following, arXiv:1404.3274",
+    "tone": "debunk",
+    "date": "2026-07-11"
+   }
+  ]
+ },
+ "recent_terms": [
+  "whipsaw"
+ ]
+}

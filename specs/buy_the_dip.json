@@ -1,0 +1,18 @@
+{
+  "name": "Buy the dip (z-score entry on SPY)",
+  "hypothesis": "Sharp dips below the recent average are overreactions- buying them and selling the recovery beats holding.",
+  "shape": "mean_reversion",
+  "universe": ["SPY"],
+  "signal_rule": "Buy the S&P 500 when it closes 1.5 standard deviations below its 20-day average; sell when it recovers to the average; hold cash otherwise.",
+  "plain_rule": "When the market dips hard below its recent average, you buy. When it climbs back to normal, you sell and wait.",
+  "display_title": "Buy The Dip",
+  "params": {"lookback_d": 20, "entry_z": -1.5, "exit_z": 0.0},
+  "entry": "close <= 20-day mean - 1.5 sigma",
+  "exit": "close >= 20-day mean",
+  "rebalance": "daily",
+  "position_sizing": "all_in_or_cash",
+  "lookback": "20 days",
+  "claimed_result": "The internet's favourite strategy- every dip is a discount, and buying discounts must beat paying full price",
+  "paper_ref": "Tested against the buy-the-dip folk strategy; mean-reversion framing per De Bondt & Thaler (1985), Does the Stock Market Overreact?, Journal of Finance",
+  "codeable": true
+}

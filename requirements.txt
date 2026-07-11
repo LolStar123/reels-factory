@@ -1,0 +1,21 @@
+# Core requirements- verified against Python 3.12.
+pandas
+numpy
+scipy
+matplotlib
+yfinance
+ib_insync
+feedparser
+PyMuPDF          # fitz- PDF text extraction (primary)
+pdfplumber       # PDF fallback
+pydantic         # contracts.py typed schemas (CODEX-3)
+moviepy          # assembly; imageio-ffmpeg bundled ffmpeg as fallback
+pyarrow          # parquet cache
+requests
+Pillow
+pyttsx3          # last-resort TTS (piper binary bundled in tools/piper is preferred keyless path)
+pyyaml
+python-dotenv
+# --- growth layer, install when switched on ---
+# streamlit      # module 15 dashboard
+# anthropic      # LLM extraction/scripting/factcheck

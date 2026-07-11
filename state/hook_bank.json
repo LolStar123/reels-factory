@@ -1,0 +1,89 @@
+{
+ "schema_version": 1,
+ "updated": "2026-07-11",
+ "source_note": "Seeded from the PRD's proven-hook structures + manual imports (state/hook_seeds.csv). Stage 0 scraping and stage 12 performance re-scoring update the scores in place.",
+ "hooks": [
+  {
+   "id": "tested-so-you-dont",
+   "template": "I tested {X} so you don't have to",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "both"
+  },
+  {
+   "id": "paper-claimed-reality",
+   "template": "A paper claimed {Y}. It's actually {Z}.",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "both"
+  },
+  {
+   "id": "money-transform",
+   "template": "\u00a3{N} turned into \u00a3{M}",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "high_finance"
+  },
+  {
+   "id": "sharpe-gap",
+   "template": "A paper said this strategy had a Sharpe of {A}. I tested it. It's {B}.",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "wannabe_quant"
+  },
+  {
+   "id": "everyone-swears-by",
+   "template": "The strategy everyone swears by- against 20 years of data",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "high_finance"
+  },
+  {
+   "id": "what-x-actually-tells",
+   "template": "What {X} actually tells you, in 30 seconds",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "wannabe_quant"
+  },
+  {
+   "id": "does-x-beat-market",
+   "template": "Does {X} actually beat buy-and-hold? I tested {N} years.",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "high_finance"
+  },
+  {
+   "id": "this-one-holds-up",
+   "template": "Most viral strategies fail my backtest. This one didn't.",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "both"
+  },
+  {
+   "id": "seed-itxsyd",
+   "template": "I tested X so you don't have to",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "both",
+   "origin": "manual-seed"
+  },
+  {
+   "id": "seed-apcyia",
+   "template": "A paper claimed Y. It's actually Z.",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "both",
+   "origin": "manual-seed"
+  },
+  {
+   "id": "seed-$ti$",
+   "template": "$N turned into $M",
+   "score": 1.0,
+   "uses": 0,
+   "lane": "high_finance",
+   "origin": "manual-seed"
+  }
+ ],
+ "format_notes": [],
+ "audio_families": []
+}

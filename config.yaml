@@ -1,0 +1,132 @@
+# Reels Factory config- single source of truth. Everything downstream reads from here.
+# Account handles are provisional until the IG accounts are registered.
+
+brand:
+  handle: "@priced.in"                  # default/primary account watermark; per-vertical below overrides
+  display_name: "Priced In"
+  currency:                             # ALL money on screen + in VO uses this (USD- never GBP)
+    symbol: "$"
+    word: "dollars"
+    grand: "grand"                      # spoken shorthand for thousands
+  tagline: "we tested the paper so you don't have to"
+  niche: "evidence-based investing + trading strategy"
+  audience: "18-30, beginner-to-intermediate retail + aspiring quants, UK-leaning"
+  voice: "sharp, confident, plain-English, no hype, no financial-advice tone; a smart quant mate who shows the receipts"
+  colours:
+    bg: "#0E1116"
+    accent: "#E8B923"
+    benchmark: "#8A9099"
+    text: "#FFFFFF"
+    positive: "#2ECC71"
+    negative: "#E74C3C"
+  fonts:
+    headline: "Montserrat SemiBold / ExtraBold"     # assets/fonts/Montserrat-SemiBold.ttf, -ExtraBold.ttf (bundled)
+    body: "Inter Regular / Medium"                  # assets/fonts/Inter-Regular.ttf, Inter-Medium.ttf (bundled)
+    mono: "JetBrains Mono"                          # assets/fonts/JetBrainsMono-Regular.ttf, -Bold.ttf (bundled)
+  watermark:
+    style: "handle text + small logo mark, bottom-safe, 55% opacity, anti-crop drift ON"
+
+research:
+  sources: ["arXiv q-fin", "SSRN (FEN/finance)", "Google Scholar", "NBER", "journal RSS"]
+  topics_bias: ["momentum", "mean-reversion", "factor investing", "seasonality", "vol", "pairs/stat-arb"]
+  min_backtest_years: 10
+  benchmark: "SPY (buy & hold)"
+
+data:
+  primary_source: "IBKR (ib_insync / TWS API)"
+  fallback_source: "yfinance -> stooq -> bundled sample parquet"
+  cache_dir: "state/marketdata/"
+  sample_universe: ["SPY", "TLT", "GLD", "BTC-USD", "AAPL", "MSFT", "JPM", "XOM", "VIXY"]  # bundled parquet, 2004->2026
+
+video:
+  resolution: "1080x1920"
+  fps: 30
+  target_seconds: 32
+  chart_draw_seconds: 6
+  hook_seconds: 2.2                     # brief SILENT intro card- the hook is read, not spoken
+  safe_area: {top_px: 220, bottom_px: 320}
+
+music:
+  mode: "royalty_free_bed"
+  mood: ["minimal", "lo-fi", "ambient tech", "understated tension"]
+  bpm_range: [70, 110]
+  duck_under_voice_db: -14
+  library_dir: "assets/music/"
+
+tts:
+  # chain (best first): chatterbox (MIT, beats ElevenLabs in blind tests- RTX 3060 CUDA)
+  #   -> kokoro (Apache, top local narration, fast CPU) -> edge-tts (free MS neural, online)
+  #   -> piper (bundled offline, phrase-split) -> pyttsx3 -> captions-only
+  engine_order: ["chatterbox", "kokoro", "edge", "piper"]
+  chatterbox_exaggeration: 0.55                     # emotion knob- 0.5 neutral, higher = livelier
+  chatterbox_cfg: 0.4                               # lower = slower, more deliberate pacing
+  kokoro_model: "tools/kokoro/kokoro-v1.0.onnx"
+  kokoro_voices: "tools/kokoro/voices-v1.0.bin"
+  kokoro_voice: "am_michael"                        # US male; af_heart = highest-rated overall
+  kokoro_speed_by_role: {beat: 0.95, numbers: 0.88, cta: 1.0}   # ebb + flow per sentence role
+  edge_voice: "en-US-ChristopherNeural"
+  edge_rate_by_role: {beat: "-6%", numbers: "-12%", cta: "+2%"}
+  elevenlabs_env: "ELEVENLABS_API_KEY"              # optional paid tier, slots above chatterbox
+  piper_exe: "tools/piper/piper/piper.exe"
+  piper_model: "tools/piper/en_GB-alan-medium.onnx"
+  piper_length_scale: 1.08
+  fallback: "pyttsx3 -> captions-only"
+
+cadence: "~2 reels/day PER ACCOUNT, generated the night before in a batch, held for approval"
+format_priority: ["backtest-results reel (equity curve)", "AI-broll reel", "carousel fallback"]
+posting: "human-approval gate ON (never auto-post without explicit OK in v1)"
+budget: "prefer free/local; only call paid APIs if keys are present"
+
+trend_research:
+  competitors: []                                    # seeded by stage 0 discovery + state/hook_seeds.csv manual imports
+  refresh_days: 7
+  hook_bank: "state/hook_bank.json"
+
+feedback:
+  enabled: true
+  metrics_source: "Instagram Graph API insights (reach, plays, avg_watch_time, saves, shares, follows_from_post)"
+  store: "state/performance.json"
+  learn_after_n_posts: 10
+  north_star: "avg_watch_time_ratio then saves then follows"
+
+compliance:
+  jurisdiction: "UK"
+  mode: "educational_results_reporting_only"
+  hard_disclaimer: "Educational only. Not financial advice. Capital at risk. Do your own research."
+  banned_phrases: ["you should buy", "you should sell", "guaranteed returns", "can't lose", "risk-free profit", "get rich"]
+
+approval:
+  channel: "out/<slug>/ approval-pending flag -> write APPROVE or REJECT:<tag> to out/<slug>/DECISION"
+  never_post_without: "explicit approval"
+  reject_tags: ["off-brand", "weak-hook", "wrong-lane", "numbers-dull", "factual-doubt"]
+
+distribution:
+  buffer_target_days: 5
+  batch: true
+  repurpose: ["IG Reel (primary)", "YouTube Short", "TikTok", "X/Twitter thread", "carousel"]
+
+verticals:
+  - key: "high_finance"
+    handle: "@priced.in"                # PRIMARY (confirm at signup); backups @pricedin.co / @getpricedin / @pricedin.markets
+    display_name: "Priced In"
+    bio: "The strategies everyone swears by- backtested against the market. Receipts, not hype. Educational only, not advice. New test daily."
+    lane: "aspirational-finance"
+    audience: "people who WANT to feel like a serious markets person; retail, NOT pros"
+    identity: "makes the viewer feel sophisticated + insider while the content stays accessible"
+    topic_slice: ["moving-average crossover vs market", "stop-loss strategies vs buy&hold", "buy-the-dip vs buy&hold", "DCA vs lump sum", "does timing the market work", "viral-strategy myth-busting"]
+    aesthetic: "high-finance cinematic: clean lines, gold-on-charcoal, expensive-looking, gravitas"
+    signature_audio: "Succession (Main Title Theme) - Nicholas Britell (add in-app at post time)"
+    posts_per_day: 2
+    launch_mode: true
+  - key: "wannabe_quant"
+    handle: "@overfit.quant"            # PRIMARY (confirm at signup); backups @overfit.io / @longvega / @realisedvol / @thevolsurface
+    display_name: "Overfit"
+    bio: "The real quant machinery, minus the PhD. Vol surfaces, Black-Scholes, the greeks- explained like you're clever. Educational only."
+    lane: "aspirational-quant"
+    audience: "r/algotrading-type retail quants, Python-dabblers, aspiring quants who want to FEEL technical"
+    identity: "flatters the viewer's intelligence- the REAL quant machinery, the dopamine of feeling smart"
+    topic_slice: ["volatility surfaces", "Black-Scholes / greeks", "implied vs realised vol", "factor models", "stat-arb / pairs", "Kelly criterion"]
+    aesthetic: "nerdy terminal: dark, mono, live formulae + 3D surfaces on screen, dense-but-legible"
+    signature_audio: "understated nerdy-tech bed OR the Succession theme; rotate per audio radar"
+    posts_per_day: 2
+    launch_mode: true

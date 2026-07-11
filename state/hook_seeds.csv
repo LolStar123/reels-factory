@@ -1,0 +1,6 @@
+url_or_text,lane,note
+"I tested X so you don't have to",both,PRD seed structure
+"A paper claimed Y. It's actually Z.",both,PRD seed structure
+"$N turned into $M",high_finance,PRD seed structure
+# Add competitor reel URLs or observed hook wordings here- one per line.
+# The manual-import floor (CODEX-5 + GEMINI-3): the hook bank fills from this file even when scraping is blocked.

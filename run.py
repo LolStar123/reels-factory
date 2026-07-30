@@ -66,13 +66,18 @@ def doctor() -> int:
     check("sample paper", (ROOT / "assets" / "sample" / "sample_paper_trend_following.pdf").exists())
     check("sample strategy spec", (ROOT / "assets" / "sample" / "sample_strategy_spec.json").exists())
     piper = ROOT / "tools" / "piper" / "piper" / "piper.exe"
-    check("piper tts", piper.exists(), "keyless neural VO")
+    kokoro = ROOT / "tools" / "kokoro" / "kokoro-v1.0.onnx"
+    if piper.exists() or kokoro.exists():
+        print("  PASS  local neural TTS  (" + ("piper" if piper.exists() else "kokoro") + ")")
+    else:
+        print("  SKIP  local neural TTS (optional models are not included in the public clone)")
     for mod in ("pandas", "numpy", "matplotlib", "yfinance", "feedparser", "fitz",
                 "pydantic", "pyarrow", "PIL", "yaml"):
         check(f"import {mod}", iu.find_spec(mod) is not None)
     for d in ("state", "out"):
         p = ROOT / d
         try:
+            p.mkdir(parents=True, exist_ok=True)
             t = p / ".write_test"
             t.write_text("x")
             t.unlink()

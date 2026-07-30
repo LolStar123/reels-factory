@@ -1,140 +1,148 @@
-<img align="right" src="docs/media/reel_demo.gif" width="236" alt="30-second demo reel, 3x speed: animated equity curve, counting stat cards, karaoke captions" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+  <img src="assets/banner-light.svg" alt="Reels Factory: paper in, evidence out, release locked">
+</picture>
 
 # Reels Factory
 
-**A research pipeline that happens to publish to Instagram.**
-Reads real quant-finance papers, backtests the strategy on real market data, and
-packages the *result* as a branded 9:16 reel- voiced, captioned, QC-gated, and
-blocked from posting until a human approves it.
+Reels Factory turns a quant paper into a QC-gated, 1080 x 1920 research reel.
+It constrains the paper to a vetted strategy shape, runs a walk-forward backtest,
+writes and renders the result, then holds the package for a human decision.
 
-![Python 3.12](https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white)
-![offline dry run](https://img.shields.io/badge/dry_run-zero_network,_zero_keys-2ea043)
-![QC](https://img.shields.io/badge/QC-hard_gates,_red--teamed-e3b341)
-![license](https://img.shields.io/badge/license-MIT-8b949e)
+The difficult part is not making an MP4. It is keeping every spoken and visible
+number traceable to one typed result while independent checks can still stop the
+release. No package becomes publishable merely because the render completed.
 
-The reel on the right was built by one command from a bundled arXiv paper
-(Lempérière et al. 2014, *Two Centuries of Trend Following*), with no network and no
-API keys. The research loop is the product; the video is the packaging.
+## One paper, one measured result
 
-## The honesty system
+<table>
+  <tr>
+    <td width="36%" align="center">
+      <img src="docs/media/reel_demo.gif" width="260" alt="Animated demo reel at three times normal speed">
+      <br><sub>31.8-second reel shown at 3x speed</sub>
+    </td>
+    <td width="64%">
+      <code>RUN / OFFLINE FIXTURE</code><br><br>
+      <strong>Paper</strong><br>
+      Two Centuries of Trend Following, arXiv:1404.3274<br><br>
+      <strong>Test window</strong><br>
+      2004-2026, bundled sample data<br><br>
+      <strong>Observed result</strong><br>
+      8.71% CAGR / 0.83 Sharpe / -23.68% max drawdown<br><br>
+      <strong>Benchmark</strong><br>
+      SPY buy-and-hold / 10.89% CAGR<br><br>
+      <strong>Gate</strong><br>
+      <code>QC PASS / 0 FAILURES</code>
+    </td>
+  </tr>
+</table>
 
-Finance content that misquotes its own numbers is worse than no content. Two
-**independent** gates- written as separate code paths so one bug can't silently
-pass both- stand between a backtest and a published frame:
+Those numbers come from a verified offline run of the bundled fixture, not from
+the paper's claimed performance. The sample-data result is explicitly marked
+`survivorship_limited: true`. The content is educational and is not financial
+advice.
 
-1. **QC by construction** (`qc.py`): every number rendered on screen comes from an
-   `overlays.json` the chart renderer emits as ground truth. QC asserts exact
-   equality with the `BacktestResult`- no OCR, no "close enough".
-2. **Independent fact-check** (`factcheck.py`): a separate pass re-derives every
-   spoken and written claim from the backtest or the paper, with an optional
-   LLM semantic re-read layered on top.
-
-Plus the paranoid extras:
-
-- **Zone discipline**- `layout.py` partitions the 1080x1920 frame into exclusive
-  bands (captions / watermark / top-safe); QC pixel-diffs each band and fails the
-  reel if any renderer bleeds into reserved space.
-- **Data provenance**- IBKR (point-in-time) → yfinance → stooq → bundled parquet,
-  and any fallback stamps **survivorship-limited** on the chart itself. The honesty
-  gate always beats the budget rule.
-- **Red-team regression** (`tools/redteam_test.py`)- a doctored overlay and an
-  injected advice-phrase MUST fail QC, or the build breaks.
-- **Approval-gated publishing**- every reel lands as `APPROVAL_PENDING`; nothing
-  touches the Instagram API until a human writes `APPROVE` into a `DECISION` file.
-  Rejection tags (`weak-hook`, `numbers-dull`, ...) feed back into the planner.
-
-## Pipeline
+## The system
 
 ```mermaid
 flowchart LR
-    subgraph research [research]
-        A["trends<br/>hook bank"] --> B["harvest<br/>arXiv q-fin"]
-        B --> C["extract<br/>paper to constrained DSL"]
+    subgraph research["RESEARCH"]
+        A["Paper or constrained spec"] --> B["Codeability gate"]
+        B --> C["Typed StrategySpec"]
     end
-    subgraph proof [proof]
-        C --> D["data<br/>IBKR, yfinance, stooq"]
-        D --> E["backtest<br/>walk-forward engine"]
-        E --> F["insight<br/>angle + lane + tone"]
+    subgraph evidence["EVIDENCE"]
+        C --> D["Layered market data"]
+        D --> E["Walk-forward backtest"]
+        E --> F["Typed BacktestResult"]
     end
-    subgraph production [production]
-        F --> G["script<br/>20-45s, beat-timed"]
-        G --> H["voice<br/>4-engine TTS chain"]
-        G --> I["charts<br/>1080x1920 progressive reveal"]
-        H --> J["assemble<br/>captions, ducked bed, watermark"]
-        I --> J
+    subgraph production["PRODUCTION"]
+        F --> G["Script and voice"]
+        F --> H["Charts and overlays"]
+        G --> I["9:16 assembly"]
+        H --> I
     end
-    subgraph gatekeeping [gatekeeping]
-        J --> K{"qc + factcheck<br/>hard gates"}
-        K -->|"pass"| L["package<br/>APPROVAL_PENDING"]
-        K -->|"fail"| X["rejected"]
-        L --> M{"human DECISION"}
-        M -->|"APPROVE"| N["publish"]
-        M -->|"REJECT tag"| O["learning loop"]
+    subgraph control["CONTROL"]
+        I --> J{"QC and fact-check"}
+        J -->|"fail"| K["Rejected package"]
+        J -->|"pass"| L["APPROVAL_PENDING"]
+        L --> M{"Human DECISION"}
+        M -->|"APPROVE"| N["Publish eligible"]
+        M -->|"REJECT tag"| O["Learning loop"]
     end
-    N --> P["feedback<br/>IG insights"] --> A
 ```
 
-34 modules, ~4,000 lines, typed end-to-end: every stage passes a Pydantic contract
-(`Paper → StrategySpec → BacktestResult → Insight → Script → ReelPackage`), and every
-run logs machine-readable JSONL keyed by `run_id`.
+The contracts move in one direction:
+`Paper -> StrategySpec -> BacktestResult -> Insight -> Script -> ReelPackage`.
+Machine-readable JSONL logs attach every stage to a `run_id`.
 
-## Voice: a four-engine fallback chain
+### What can stop a release
 
-| Engine | What it brings | When |
-|---|---|---|
-| **Chatterbox** (Resemble AI) | SOTA quality | CUDA available |
-| **Kokoro-82M** (ONNX) | ~5x realtime on CPU, fully offline | default |
-| **edge-tts** | real word-boundary timings for karaoke captions | online |
-| **Piper** | bundled offline fallback | always works |
+- [`extract.py`](extract.py) rejects papers that do not map to a supported
+  momentum, mean-reversion, crossover, pairs, calendar, factor-sort, or
+  volatility shape.
+- [`qc.py`](qc.py) compares rendered overlay values with the backtest result and
+  checks frame zones, media duration, codecs, audio, disclaimer text, and
+  prohibited advice language.
+- [`factcheck.py`](factcheck.py) independently re-derives claims from the result
+  and paper instead of trusting the renderer.
+- [`package.py`](package.py) writes `APPROVAL_PENDING` only after QC passes.
+  Publishing also checks the approval ledger, so a render alone is insufficient.
+- [`tools/redteam_test.py`](tools/redteam_test.py) proves that doctored numbers
+  and advice phrases fail the gate.
 
-Degrades gracefully to `pyttsx3` and finally captions-only- a dry run on a bare
-machine still produces a complete, voiced reel.
+## Run it offline
 
-## Papers never become arbitrary code
+Python 3.12 and FFmpeg with `libx264` and `aac` are required. The public clone
+includes the paper, nine sample parquet files, fonts, and strategy fixture. It
+does not include the optional Piper or Kokoro model files.
 
-`extract.py` maps papers onto a fixed menu of vetted strategy shapes (momentum,
-mean-reversion, crossover, pairs, calendar, factor sort, vol) behind a
-`codeability_gate()`. If a paper doesn't fit a shape the pipeline can honestly
-test, it's rejected- not improvised.
-
-## Quick start
-
+```powershell
+python -m pip install -r requirements.txt
+python tools/make_bed.py
+python run.py --doctor
+python run.py --dry-run --vertical high_finance
 ```
-python run.py --doctor     # preflight: ffmpeg, fonts, data, TTS, encoders
-python run.py --dry-run    # full offline build from the bundled paper fixture
-```
 
-`out/<slug>/` gets the mp4, cover, caption.txt, meta.json, and an
-`APPROVAL_PENDING` flag. Other entry points:
+The verified fixture run finishes without network access or API keys. If no
+local TTS model is installed, it falls back to captions-only narration; the
+generated bed still gives the QC gate a valid audio stream. Outputs appear under
+`out/<slug>/` as an MP4, cover, caption, metadata, and, on a passing run, an
+`APPROVAL_PENDING` file.
 
-| Command | Does |
+Useful isolated checks:
+
+| Command | Scope |
 |---|---|
-| `run.py --batch N` | live: harvest arXiv q-fin, build N reels into the buffer |
-| `run.py --check data\|backtest\|chart\|package` | one stage, isolated, asserted |
-| `run.py --refresh-trends` | rebuild the hook bank |
-| `run.py --pull-insights` | IG insights → performance report → hook re-scoring |
-| `run.py --approve-scan` | ingest `out/*/DECISION` files into the ledger |
+| `python run.py --check data` | Load the bundled parquet series |
+| `python run.py --check backtest` | Assert the fixture backtest |
+| `python run.py --check chart` | Render the progressive chart and overlays |
+| `python run.py --check package` | Build and gate one package |
+| `python tools/redteam_test.py` | Exercise deliberate QC failures |
 
-## Sample output
+Live harvesting, online TTS, IBKR, LLM review, and Instagram publishing are
+optional integrations. Their credentials belong in an untracked `.env`, never
+in source.
 
-<p>
-  <img src="docs/media/cover_golden_cross.png" width="270" alt="Cover frame: golden cross strategy vs S&P, with CAGR / Sharpe / max drawdown stat row" />
-</p>
+## How the repository is structured
 
-One brand system (dark, gold accent, tabular numerals), two account skins, and a
-self-synthesized music bed (`tools/make_bed.py`)- licence-clean by construction.
+| Area | Responsibility |
+|---|---|
+| `contracts.py`, `extract.py`, `data.py`, `backtest.py` | Research constraints and evidence |
+| `insight.py`, `script.py`, `voice.py`, `charts.py` | Editorial and visual production |
+| `assemble.py`, `caption.py`, `cover.py`, `audio.py` | Media assembly |
+| `qc.py`, `factcheck.py`, `compliance.py`, `review.py` | Release controls |
+| `package.py`, `ledger.py`, `feedback.py` | Approval state and learning loop |
+| `assets/sample/`, `state/marketdata/sample/` | Reproducible offline fixture |
 
-## Also in here
+The runtime directories `out/`, `state/work/`, and local voice models are
+deliberately excluded. The music bed is reproducible with
+[`tools/make_bed.py`](tools/make_bed.py).
 
-- **A/B experiments** (`experiments.py`)- hook/cover/length/post-time arms, judged
-  on a north-star metric once each arm has enough reels.
-- **Cost ledger** (`costs.py`)- free-first accounting, warns at 80% of budget.
-- **Streamlit dashboard** (`dashboard.py`)- read-only monitoring surface.
-- **Community drafts** (`community.py`)- comment/DM replies in brand voice,
-  approval-gated like everything else.
+## Contributing
 
----
+Keep changes evidence-first. Add a fixture when introducing a strategy shape,
+keep render values derived from `BacktestResult`, and add a failing red-team case
+before changing a gate. Run the staged checks and the red-team test before
+opening a pull request.
 
-*Built by [Atul Kanodia](https://github.com/LolStar123). The IG accounts this feeds
-are new- the factory was finished before the audience existed, which is either
-discipline or optimism.*
+MIT licensed. See [`LICENSE`](LICENSE).

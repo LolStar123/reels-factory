@@ -99,6 +99,7 @@ does not include the optional Piper or Kokoro model files.
 
 ```powershell
 python -m pip install -r requirements.txt
+python tools/check_font_provenance.py
 python tools/make_bed.py
 python run.py --doctor
 python run.py --dry-run --vertical high_finance
@@ -171,6 +172,6 @@ keep render values derived from `BacktestResult`, and add a failing red-team cas
 before changing a gate. Run the staged checks and the red-team test before
 opening a pull request.
 
-Design tokens, layout zones and release behavior are recorded in [DESIGN.md](DESIGN.md).
+Design tokens, layout zones and release behavior are recorded in [DESIGN.md](DESIGN.md). The [bundled font source guide](assets/fonts/README.md) includes exact upstream sources, OFL notices and an offline integrity check.
 
 MIT licensed. See [`LICENSE`](LICENSE).

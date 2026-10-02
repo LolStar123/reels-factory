@@ -6,7 +6,7 @@ A command-line pipeline turns a constrained strategy paper into a vertical resea
 
 ## Visual system
 
-The existing brand tokens are authoritative in `config.yaml`: charcoal `#0E1116`, gold `#E8B923`, grey benchmark `#8A9099`, white text, green positive `#2ECC71` and red negative `#E74C3C`. Montserrat supplies headlines, Inter body text and JetBrains Mono numerical labels. The actual bundled TTFs are used by renderers; missing fonts fail rather than silently changing layout. No new fonts are introduced by this change. The bundled fonts do not include adjacent licence files; upstream font licences still need recording before a fresh redistribution.
+The existing brand tokens are authoritative in `config.yaml`: charcoal `#0E1116`, gold `#E8B923`, grey benchmark `#8A9099`, white text, green positive `#2ECC71` and red negative `#E74C3C`. Montserrat supplies headlines, Inter body text and JetBrains Mono numerical labels. The actual bundled TTFs are used by renderers; missing fonts fail rather than silently changing layout. The six TTFs are byte-verified against pinned official sources, with complete SIL OFL 1.1 notices and hashes in [the font source guide](assets/fonts/README.md). Inter Regular and Medium use the official Inter 4.1 static release; Montserrat and JetBrains Mono retain their existing verified binaries. `python tools/check_font_provenance.py` checks the retained files without network access.
 
 The signature is a progressive equity comparison with measured final values, followed by a short statement of what the test found. Do not add decorative numbers, a claim of live trading or paper performance relabelled as observed performance.
 

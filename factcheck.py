@@ -50,7 +50,7 @@ def _allowed_values(result: BacktestResult) -> set[float]:
     return vals
 
 
-def factcheck(script: Script, result: BacktestResult) -> tuple[bool, list[str]]:
+def factcheck(script: Script, result: BacktestResult, *, allow_online: bool = True) -> tuple[bool, list[str]]:
     """Deterministic: every number spoken/written must be derivable from the backtest or the claim."""
     fails = []
     allowed = _allowed_values(result)
@@ -60,7 +60,7 @@ def factcheck(script: Script, result: BacktestResult) -> tuple[bool, list[str]]:
             near = any(abs(num - a) <= max(0.011, abs(a) * 0.006) for a in allowed)
             if not near and num not in (1, 2, 3, 4, 5, 12, 20, 30, 45, 500):  # small counting words
                 fails.append(f"{label}: number {num} not traceable to the backtest")
-    if os.environ.get("ANTHROPIC_API_KEY"):
+    if allow_online and os.environ.get("ANTHROPIC_API_KEY"):
         try:
             fails += _llm_pass(script, result)
         except Exception:

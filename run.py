@@ -197,7 +197,7 @@ def build_reel(paper, offline: bool, run_id: str, force_vertical: str | None = N
         jlog(run_id, "thumbnail", error=str(e)[:200])
         thumb = None
 
-    fc_ok, fc_fails = fc.factcheck(script, result)
+    fc_ok, fc_fails = fc.factcheck(script, result, allow_online=not offline)
     qc_ok, qc_fails = qcm.run_qc(built["mp4"], chart["overlays"], result, script, workdir)
     all_fails = qc_fails + ([] if fc_ok else [f"FACTCHECK: {f}" for f in fc_fails])
     jlog(run_id, "qc", passed=qc_ok and fc_ok, fails=len(all_fails),
@@ -253,7 +253,13 @@ def staged_check(which: str) -> int:
     if which == "package":
         slug = build_reel(sample_paper(), offline=True, run_id=run_id)
         print(f"package: {slug}")
-        return 0 if slug else 1
+        if not slug:
+            return 1
+        metadata = json.loads((ROOT / "out" / slug / "meta.json").read_text(encoding="utf-8"))
+        if not metadata.get("qc_passed"):
+            print("package check failed: QC did not pass; inspect meta.json")
+            return 1
+        return 0
     print(f"unknown check {which}")
     return 2
 

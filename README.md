@@ -83,8 +83,9 @@ Machine-readable JSONL logs attach every stage to a `run_id`.
 - [`qc.py`](qc.py) compares rendered overlay values with the backtest result and
   checks frame zones, media duration, codecs, audio, disclaimer text, and
   prohibited advice language.
-- [`factcheck.py`](factcheck.py) independently re-derives claims from the result
-  and paper instead of trusting the renderer.
+- [`factcheck.py`](factcheck.py) checks numerical claims against `BacktestResult` independently
+  of the renderer. Optional online LLM checking is an additional pass; offline runs
+  never call it, even when a provider key is present in the environment.
 - [`package.py`](package.py) writes `APPROVAL_PENDING` only after QC passes.
   Publishing also checks the approval ledger, so a render alone is insufficient.
 - [`tools/redteam_test.py`](tools/redteam_test.py) proves that doctored numbers
@@ -109,19 +110,44 @@ generated bed still gives the QC gate a valid audio stream. Outputs appear under
 `out/<slug>/` as an MP4, cover, caption, metadata, and, on a passing run, an
 `APPROVAL_PENDING` file.
 
+Keep this run local. `--dry-run` uses bundled data and excludes online TTS and LLM fact-checking; adding `--tts-online` explicitly allows an online voice provider. The doctor reports optional local voice models separately. Avoid configuring live IBKR or publishing credentials when verifying an offline clone.
+
 Useful isolated checks:
 
 | Command | Scope |
 |---|---|
 | `python run.py --check data` | Load the bundled parquet series |
-| `python run.py --check backtest` | Assert the fixture backtest |
+| `python run.py --check backtest` | Run and print the fixture backtest |
 | `python run.py --check chart` | Render the progressive chart and overlays |
-| `python run.py --check package` | Build and gate one package |
+| `python run.py --check package` | Build one package; return nonzero if QC fails |
 | `python tools/redteam_test.py` | Exercise deliberate QC failures |
 
 Live harvesting, online TTS, IBKR, LLM review, and Instagram publishing are
 optional integrations. Their credentials belong in an untracked `.env`, never
 in source.
+
+## Read the output
+
+```text
+out/<slug>/
+  <slug>.mp4       rendered reel
+  cover.png        cover image, when thumbnail generation succeeds
+  caption.txt      caption, alt text and optional audio note
+  meta.json        measured metrics, data source, duration and QC failures
+  APPROVAL_PENDING only present on a passing package
+```
+
+Inspect `meta.json` before treating a rendered file as ready. A failed package remains inspectable with `qc_passed: false`; `python run.py --check package` reports failure through its exit status. `APPROVAL_PENDING` requests review and is not approval to publish.
+
+The working evidence stays under `state/work/<slug>/`, including the chart's `overlays.json`, assembled media and intermediate captions. Run logs use `state/runs.jsonl`; `state/ledger.db` records run and reel state. These generated paths are ignored. Dry runs also update the tracked `state/used_topics.json`, so preserve or review that change separately from source changes.
+
+Regression checks for the bundled result, rejected package exit status and offline provider isolation:
+
+```sh
+python -m unittest discover -s tests -v
+```
+
+The doctor, stage checks and red-team run validate the local fixture. They do not verify live harvesting, provider quality, a broker session or Instagram publishing. Publishing requires credentials and a recorded human decision; no account or publishing step is part of the offline example.
 
 ## How the repository is structured
 
@@ -144,5 +170,7 @@ Keep changes evidence-first. Add a fixture when introducing a strategy shape,
 keep render values derived from `BacktestResult`, and add a failing red-team case
 before changing a gate. Run the staged checks and the red-team test before
 opening a pull request.
+
+Design tokens, layout zones and release behavior are recorded in [DESIGN.md](DESIGN.md).
 
 MIT licensed. See [`LICENSE`](LICENSE).
